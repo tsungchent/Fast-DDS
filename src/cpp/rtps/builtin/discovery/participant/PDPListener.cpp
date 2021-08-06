@@ -135,6 +135,7 @@ void PDPListener::onNewCacheChangeAdded(
                             << pdata->m_guid << " at "
                             << "MTTLoc: " << pdata->metatraffic_locators
                             << " DefLoc:" << pdata->default_locators);
+                    pdata->source_timestamp = change->sourceTimestamp;
 
                     RTPSParticipantListener* listener = parent_pdp_->getRTPSParticipant()->getListener();
                     if (listener != nullptr)
@@ -165,6 +166,7 @@ void PDPListener::onNewCacheChangeAdded(
             {
                 pdata->updateData(temp_participant_data_);
                 pdata->isAlive = true;
+                pdata->source_timestamp = change->sourceTimestamp;
                 reader->getMutex().unlock();
 
                 logInfo(RTPS_PDP_DISCOVERY, "Update participant "
