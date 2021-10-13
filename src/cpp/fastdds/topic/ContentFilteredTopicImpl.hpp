@@ -40,9 +40,36 @@ public:
             const fastrtps::rtps::CacheChange_t& change,
             const fastrtps::rtps::GUID_t& reader_guid) const override
     {
-        (void)change;
         (void)reader_guid;
-        return true;
+
+        // Any expression different from the PoC one will pass the filter
+        if (0 != expression.compare("node = %0") || parameters.empty())
+        {
+            return true;
+        }
+
+        // Check minimum length
+        uint32_t min_len =
+            change.serializedPayload.representation_header_size +  // RTPS serialized payload header
+            4 + 4 +                                                // stamp
+            4;                                                     // node (string CDR length)
+        if (min_len >= change.serializedPayload.length)
+        {
+            // Filtered field not present => filter should pass
+            return true;
+        }
+
+        eprosima::fastrtps::rtps::CDRMessage_t msg(change.serializedPayload);
+        msg.pos = min_len - 4;
+        std::string data_field;
+
+        if (!eprosima::fastrtps::rtps::CDRMessage::readString(&msg, &data_field))
+        {
+            // Malformed string => filter does not pass
+            return false;
+        }
+
+        return 0 == parameters[0].compare(data_field);
     }
 
     Topic* related_topic = nullptr;
