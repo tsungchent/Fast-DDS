@@ -27,28 +27,18 @@
 #include <fastdds/topic/TopicDescriptionImpl.hpp>
 #include <fastdds/topic/TopicImpl.hpp>
 
+#include "content-filter-poc/ParameterEvent.h"
+#include "content-filter-poc/ParameterEventPubSubTypes.h"
+
 namespace eprosima {
 namespace fastdds {
 namespace dds {
-
-namespace poc {
-#include "content-filter-poc/ParameterEvent.h"
-}  // namespace poc
 
 class ContentFilteredTopicImpl : public TopicDescriptionImpl, public eprosima::fastdds::rtps::IReaderDataFilter
 {
 public:
 
-    virtual ~ContentFilteredTopicImpl()
-    {
-        if (nullptr != data_)
-        {
-            auto related_impl = static_cast<TopicImpl*>(related_topic->get_impl());
-            const TypeSupport& type = related_impl->get_type();
-            type->deleteData(data_);
-            data_ = nullptr;
-        }
-    }
+    virtual ~ContentFilteredTopicImpl() = default;
 
     const std::string& get_rtps_topic_name() const override
     {
@@ -106,27 +96,19 @@ public:
             return 0 == parameters[0].compare(data_field);
         }
 
-        auto related_impl = static_cast<TopicImpl*>(related_topic->get_impl());
-        const TypeSupport& type = related_impl->get_type();
-        if (nullptr == data_)
-        {
-            data_ = (poc::ParameterEvent*)type->createData();
-        }
-        type->deserialize(const_cast<fastrtps::rtps::SerializedPayload_t*>(&change.serializedPayload), data_);
+        ParameterEvent data;
+        ParameterEventPubSubType type;
+        type.deserialize(const_cast<fastrtps::rtps::SerializedPayload_t*>(&change.serializedPayload), &data);
 
         return
-            data_->node() == parameters[0] &&
-            !data_->changed_parameters().empty() &&
-            data_->changed_parameters()[0].name() == parameters[1];
+            data.node() == parameters[0] &&
+            !data.changed_parameters().empty() &&
+            data.changed_parameters()[0].name() == parameters[1];
     }
 
     Topic* related_topic = nullptr;
     std::string expression;
     std::vector<std::string> parameters;
-
-private:
-
-    mutable poc::ParameterEvent* data_ = nullptr;
 };
 
 } /* namespace dds */

@@ -42,6 +42,8 @@ if(NOT ((MSVC OR MSVC_IDE) AND EPROSIMA_INSTALLER))
             ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/topic/qos/TopicQos.cpp
             ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/topic/TopicImpl.cpp
             ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/topic/TypeSupport.cpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/topic/content-filter-poc/ParameterEvent.cxx
+            ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/topic/content-filter-poc/ParameterEventPubSubTypes.cxx
             ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/core/policy/ParameterList.cpp
             ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/log/Log.cpp
             ${PROJECT_SOURCE_DIR}/src/cpp/fastdds/log/OStreamConsumer.cpp

@@ -594,11 +594,13 @@ public:
      * @brief This function returns a constant reference to member name
      * @return Constant reference to member name
      */
-    eProsima_user_DllExport inline const std::string& name() const
-    {
-        return m_name;
-    }
+    eProsima_user_DllExport const std::string& name() const;
 
+    /*!
+     * @brief This function returns a reference to member name
+     * @return Reference to member name
+     */
+    eProsima_user_DllExport std::string& name();
     /*!
      * @brief This function copies the value in member value
      * @param _value New value to be copied in member value
@@ -776,11 +778,13 @@ public:
      * @brief This function returns a constant reference to member node
      * @return Constant reference to member node
      */
-    eProsima_user_DllExport inline const std::string& node() const
-    {
-        return m_node;
-    }
+    eProsima_user_DllExport const std::string& node() const;
 
+    /*!
+     * @brief This function returns a reference to member node
+     * @return Reference to member node
+     */
+    eProsima_user_DllExport std::string& node();
     /*!
      * @brief This function copies the value in member new_parameters
      * @param _new_parameters New value to be copied in member new_parameters
@@ -824,11 +828,13 @@ public:
      * @brief This function returns a constant reference to member changed_parameters
      * @return Constant reference to member changed_parameters
      */
-    eProsima_user_DllExport inline const std::vector<Parameter>& changed_parameters() const
-    {
-        return m_changed_parameters;
-    }
+    eProsima_user_DllExport const std::vector<Parameter>& changed_parameters() const;
 
+    /*!
+     * @brief This function returns a reference to member changed_parameters
+     * @return Reference to member changed_parameters
+     */
+    eProsima_user_DllExport std::vector<Parameter>& changed_parameters();
     /*!
      * @brief This function copies the value in member deleted_parameters
      * @param _deleted_parameters New value to be copied in member deleted_parameters
