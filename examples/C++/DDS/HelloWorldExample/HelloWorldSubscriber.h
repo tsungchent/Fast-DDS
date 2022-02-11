@@ -53,6 +53,8 @@ private:
 
     eprosima::fastdds::dds::Topic* topic_;
 
+    eprosima::fastdds::dds::ContentFilteredTopic* filtered_topic_;
+
     eprosima::fastdds::dds::DataReader* reader_;
 
     eprosima::fastdds::dds::TypeSupport type_;

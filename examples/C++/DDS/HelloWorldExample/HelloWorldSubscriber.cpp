@@ -18,6 +18,8 @@
  */
 
 #include "HelloWorldSubscriber.h"
+#include "HelloWorldTypeObject.h"
+
 #include <fastrtps/attributes/ParticipantAttributes.h>
 #include <fastrtps/attributes/SubscriberAttributes.h>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
@@ -39,6 +41,8 @@ HelloWorldSubscriber::HelloWorldSubscriber()
 
 bool HelloWorldSubscriber::init()
 {
+    registerHelloWorldTypes();
+
     DomainParticipantQos pqos;
     pqos.name("Participant_sub");
     participant_ = DomainParticipantFactory::get_instance()->create_participant(0, pqos);
@@ -70,10 +74,16 @@ bool HelloWorldSubscriber::init()
         return false;
     }
 
+    filtered_topic_ = participant_->create_contentfilteredtopic("FilteredTopic", topic_, "", {});
+    if (filtered_topic_ == nullptr)
+    {
+        return false;
+    }
+
     // CREATE THE READER
     DataReaderQos rqos = DATAREADER_QOS_DEFAULT;
     rqos.reliability().kind = RELIABLE_RELIABILITY_QOS;
-    reader_ = subscriber_->create_datareader(topic_, rqos, &listener_);
+    reader_ = subscriber_->create_datareader(filtered_topic_, rqos, &listener_);
 
     if (reader_ == nullptr)
     {
@@ -88,6 +98,10 @@ HelloWorldSubscriber::~HelloWorldSubscriber()
     if (reader_ != nullptr)
     {
         subscriber_->delete_datareader(reader_);
+    }
+    if (filtered_topic_ != nullptr)
+    {
+        participant_->delete_contentfilteredtopic(filtered_topic_);
     }
     if (topic_ != nullptr)
     {
@@ -138,7 +152,13 @@ void HelloWorldSubscriber::SubListener::on_data_available(
 
 void HelloWorldSubscriber::run()
 {
-    std::cout << "Subscriber running. Please press enter to stop the Subscriber" << std::endl;
+    std::cout << "Subscriber running. Please press enter to start filtering" << std::endl;
+    std::cin.ignore();
+    filtered_topic_->set_filter_expression("index BETWEEN %0 AND %1", { "2", "4" });
+    std::cout << "Filtering. Please press enter to change parameters" << std::endl;
+    std::cin.ignore();
+    filtered_topic_->set_expression_parameters({ "6", "9" });
+    std::cout << "Parameters changed. Please press enter to stop the Subscriber" << std::endl;
     std::cin.ignore();
 }
 
