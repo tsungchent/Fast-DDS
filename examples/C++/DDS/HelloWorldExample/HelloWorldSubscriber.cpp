@@ -158,7 +158,9 @@ void HelloWorldSubscriber::run()
     std::cout << "Filtering. Please press enter to change parameters" << std::endl;
     std::cin.ignore();
     filtered_topic_->set_expression_parameters({ "6", "9" });
-    std::cout << "Parameters changed. Please press enter to stop the Subscriber" << std::endl;
+    std::cout << "Parameters changed. Please press enter to change the expression" << std::endl;
+    filtered_topic_->set_filter_expression("message match %0", { "'HelloWorld'" });
+    std::cout << "Expression changed. Please press enter to stop the Subscriber" << std::endl;
     std::cin.ignore();
 }
 
