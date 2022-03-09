@@ -221,7 +221,7 @@ void MessageReceiver::process_data_fragment_message_without_security(
 void MessageReceiver::associateEndpoint(
         Endpoint* to_add)
 {
-    std::lock_guard<std::shared_mutex> guard(mtx_);
+    std::lock_guard<eprosima::shared_mutex> guard(mtx_);
     if (to_add->getAttributes().endpointKind == WRITER)
     {
         const auto writer = dynamic_cast<RTPSWriter*>(to_add);
@@ -265,7 +265,7 @@ void MessageReceiver::associateEndpoint(
 void MessageReceiver::removeEndpoint(
         Endpoint* to_remove)
 {
-    std::lock_guard<std::shared_mutex> guard(mtx_);
+    std::lock_guard<eprosima::shared_mutex> guard(mtx_);
 
     if (to_remove->getAttributes().endpointKind == WRITER)
     {
@@ -330,7 +330,7 @@ void MessageReceiver::processCDRMsg(
 #endif // if HAVE_SECURITY
 
     {
-        std::lock_guard<std::shared_mutex> guard(mtx_);
+        std::lock_guard<eprosima::shared_mutex> guard(mtx_);
 
         if (msg->length < RTPSMESSAGE_HEADER_SIZE)
         {
@@ -685,7 +685,7 @@ bool MessageReceiver::proc_Submsg_Data(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh) const
 {
-    std::shared_lock<std::shared_mutex> guard(mtx_);
+    eprosima::shared_lock<eprosima::shared_mutex> guard(mtx_);
 
     //READ and PROCESS
     if (smh->submessageLength < RTPSMESSAGE_DATA_MIN_LENGTH)
@@ -849,7 +849,7 @@ bool MessageReceiver::proc_Submsg_DataFrag(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh) const
 {
-    std::shared_lock<std::shared_mutex> guard(mtx_);
+    eprosima::shared_lock<eprosima::shared_mutex> guard(mtx_);
 
     //READ and PROCESS
     if (smh->submessageLength < RTPSMESSAGE_DATA_MIN_LENGTH)
@@ -1018,7 +1018,7 @@ bool MessageReceiver::proc_Submsg_Heartbeat(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh) const
 {
-    std::shared_lock<std::shared_mutex> guard(mtx_);
+    eprosima::shared_lock<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0;
     bool finalFlag = (smh->flags & BIT(1)) != 0;
@@ -1070,7 +1070,7 @@ bool MessageReceiver::proc_Submsg_Acknack(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh) const
 {
-    std::shared_lock<std::shared_mutex> guard(mtx_);
+    eprosima::shared_lock<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0;
     bool finalFlag = (smh->flags & BIT(1)) != 0;
@@ -1120,7 +1120,7 @@ bool MessageReceiver::proc_Submsg_Gap(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh) const
 {
-    std::shared_lock<std::shared_mutex> guard(mtx_);
+    eprosima::shared_lock<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0;
     //Assign message endianness
@@ -1160,7 +1160,7 @@ bool MessageReceiver::proc_Submsg_InfoTS(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh)
 {
-    std::lock_guard<std::shared_mutex> guard(mtx_);
+    std::lock_guard<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0;
     bool timeFlag = (smh->flags & BIT(1)) != 0;
@@ -1190,7 +1190,7 @@ bool MessageReceiver::proc_Submsg_InfoDST(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh)
 {
-    std::lock_guard<std::shared_mutex> guard(mtx_);
+    std::lock_guard<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0u;
     //bool timeFlag = smh->flags & BIT(1) ? true : false;
@@ -1217,7 +1217,7 @@ bool MessageReceiver::proc_Submsg_InfoSRC(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh)
 {
-    std::lock_guard<std::shared_mutex> guard(mtx_);
+    std::lock_guard<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0;
     //bool timeFlag = smh->flags & BIT(1) ? true : false;
@@ -1248,7 +1248,7 @@ bool MessageReceiver::proc_Submsg_NackFrag(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh) const
 {
-    std::shared_lock<std::shared_mutex> guard(mtx_);
+    eprosima::shared_lock<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0;
     //Assign message endianness
@@ -1303,7 +1303,7 @@ bool MessageReceiver::proc_Submsg_HeartbeatFrag(
         CDRMessage_t* msg,
         SubmessageHeader_t* smh) const
 {
-    std::shared_lock<std::shared_mutex> guard(mtx_);
+    eprosima::shared_lock<eprosima::shared_mutex> guard(mtx_);
 
     bool endiannessFlag = (smh->flags & BIT(0)) != 0;
     //Assign message endianness
