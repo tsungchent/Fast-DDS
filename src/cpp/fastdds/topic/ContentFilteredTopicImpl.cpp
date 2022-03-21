@@ -212,6 +212,7 @@ bool ContentFilteredTopicImpl::check_filter_signature(
                     {
                         if (std::equal(filter_signature_.begin(), filter_signature_.end(), msg->buffer + msg->pos))
                         {
+                            logError(DEBUG_CONTENT_FILTER, "Found RTPS compliant signature. Index = " << i);
                             found = true;
                             break;
                         }
@@ -220,6 +221,7 @@ bool ContentFilteredTopicImpl::check_filter_signature(
                                 std::equal(filter_signature_rti_connext_.begin(), filter_signature_rti_connext_.end(),
                                 msg->buffer + msg->pos))
                         {
+                            logError(DEBUG_CONTENT_FILTER, "Found RTI Connext signature. Index = " << i);
                             found = true;
                             break;
                         }
@@ -236,6 +238,7 @@ bool ContentFilteredTopicImpl::check_filter_signature(
                         msg->pos = bitmap_pos + bitmap_idx * 4;
                         fastrtps::rtps::CDRMessage::readUInt32(msg, &bitmap);
                         filter_result = 0 != (bitmap & bitmask);
+                        logError(DEBUG_CONTENT_FILTER, "Filter result : " << filter_result);
                     }
                 }
 
