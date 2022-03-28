@@ -4,14 +4,16 @@ if (THIRDPARTY_Asio STREQUAL "FORCE" OR ANDROID)
     find_path(Asio_INCLUDE_DIR NAMES asio.hpp NO_CMAKE_FIND_ROOT_PATH)
 else()
     find_package(Asio CONFIG QUIET)
-
+    
     # If Asio was not found, search for the header file asio.hpp in the common CMake directories.
     if(NOT Asio_FOUND)
-        find_path(Asio_INCLUDE_DIR NAMES asio.hpp)
+        find_path(Asio_INCLUDE_DIR NAMES asio.hpp PATHS ${CMAKE_INSTALL_PREFIX}/../Asio/include ${CMAKE_INSTALL_PREFIX}/Asio/include)
+        # MESSAGE("Asio not Found.")
     else()
         set(Asio_FOUND_PACKAGE ON)
+        # MESSAGE("Asio Found.")
     endif()
-
+    # MESSAGE(Asio_INCLUDE_DIR: ${Asio_INCLUDE_DIR})
     # Asio local version not found
     if(NOT Asio_INCLUDE_DIR)
         # If THIRDPARTY_Asio=ON the Asio version from thirdparty is used.
